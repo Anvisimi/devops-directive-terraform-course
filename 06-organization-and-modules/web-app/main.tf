@@ -2,7 +2,7 @@ terraform {
   # Assumes s3 bucket and dynamo DB table already set up
   # See /code/03-basics/aws-backend
   backend "s3" {
-    bucket         = "devops-directive-tf-state"
+    bucket         = "devops-directive-tf-state-simr"
     key            = "06-organization-and-modules/web-app/terraform.tfstate"
     region         = "ap-southeast-1"
     dynamodb_table = "terraform-state-locking"
@@ -38,11 +38,11 @@ module "web_app_1" {
 
   # Input Variables
   bucket_prefix    = "web-app-1-data"
-#   domain           = "devopsdeployed.com"
+  domain           = "example.com"
   app_name         = "web-app-1"
   environment_name = "production"
   instance_type    = "t2.micro"
-  create_dns_zone  = true
+  create_dns_zone  = false
   db_name          = "webapp1db"
   db_user          = "foo"
   db_pass          = var.db_pass_1 # will pass this this runtime
@@ -55,11 +55,11 @@ module "web_app_2" {
 
   # Input Variables
   bucket_prefix    = "web-app-2-data"
-#   domain           = "anotherdevopsdeployed.com"
+  domain           = "example.com"
   app_name         = "web-app-2"
   environment_name = "production"
   instance_type    = "t2.micro"
-  create_dns_zone  = true
+  create_dns_zone  = false
   db_name          = "webapp2db"
   db_user          = "bar"
   db_pass          = var.db_pass_2
