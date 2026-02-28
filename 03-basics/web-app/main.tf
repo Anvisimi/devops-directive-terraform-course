@@ -64,6 +64,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "bucket_crypto_con
   }
 }
 
+#data refers to and existing resource while resource creates it
 data "aws_vpc" "default_vpc" {
   default = true
 }
@@ -79,6 +80,7 @@ resource "aws_security_group" "instances" {
   name = "instance-security-group"
 }
 
+#ingress for inbound traffic
 resource "aws_security_group_rule" "allow_http_inbound" {
   type              = "ingress"
   security_group_id = aws_security_group.instances.id

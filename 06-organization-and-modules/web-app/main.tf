@@ -4,7 +4,7 @@ terraform {
   backend "s3" {
     bucket         = "devops-directive-tf-state"
     key            = "06-organization-and-modules/web-app/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "ap-southeast-1"
     dynamodb_table = "terraform-state-locking"
     encrypt        = true
   }
@@ -12,13 +12,13 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 5.92"
     }
   }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-southeast-1"
 }
 
 variable "db_pass_1" {
@@ -38,22 +38,24 @@ module "web_app_1" {
 
   # Input Variables
   bucket_prefix    = "web-app-1-data"
-  domain           = "devopsdeployed.com"
+#   domain           = "devopsdeployed.com"
   app_name         = "web-app-1"
   environment_name = "production"
   instance_type    = "t2.micro"
   create_dns_zone  = true
   db_name          = "webapp1db"
   db_user          = "foo"
-  db_pass          = var.db_pass_1
+  db_pass          = var.db_pass_1 # will pass this this runtime
 }
 
+# will apply in this folder
 module "web_app_2" {
+    #relative path as web-app and web-app-module has same parent
   source = "../web-app-module"
 
   # Input Variables
   bucket_prefix    = "web-app-2-data"
-  domain           = "anotherdevopsdeployed.com"
+#   domain           = "anotherdevopsdeployed.com"
   app_name         = "web-app-2"
   environment_name = "production"
   instance_type    = "t2.micro"

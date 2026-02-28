@@ -4,7 +4,7 @@ terraform {
   backend "s3" {
     bucket         = "devops-directive-tf-state"
     key            = "06-organization-and-modules/consul/terraform.tfstate"
-    region         = "us-east-1"
+    region         = "ap-southeast-1"
     dynamodb_table = "terraform-state-locking"
     encrypt        = true
   }
@@ -12,13 +12,13 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 5.92"
     }
   }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-southeast-1"
 }
 
 ############################################################

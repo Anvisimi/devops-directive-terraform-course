@@ -12,13 +12,13 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 3.0"
+      version = "~> 5.92"
     }
   }
 }
 
 provider "aws" {
-  region = "us-east-1"
+  region = "ap-southeast-1"
 }
 
 variable "db_pass" {
@@ -36,7 +36,7 @@ module "web_app" {
 
   # Input Variables
   bucket_prefix    = "web-app-data-${local.environment_name}"
-  domain           = "devopsdeployed.com"
+  domain           = "devopsdeployed.com" # don't need this
   environment_name = local.environment_name
   instance_type    = "t2.micro"
   create_dns_zone  = terraform.workspace == "production" ? true : false
