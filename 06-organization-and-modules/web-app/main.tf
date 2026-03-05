@@ -41,7 +41,7 @@ module "web_app_1" {
   domain           = "example.com"
   app_name         = "web-app-1"
   environment_name = "production"
-  instance_type    = "t2.micro"
+  instance_type    = "t3.micro"
   create_dns_zone  = false
   db_name          = "webapp1db"
   db_user          = "foo"
@@ -50,7 +50,7 @@ module "web_app_1" {
 
 # will apply in this folder
 module "web_app_2" {
-    #relative path as web-app and web-app-module has same parent
+  #relative path as web-app and web-app-module has same parent
   source = "../web-app-module"
 
   # Input Variables
@@ -58,9 +58,31 @@ module "web_app_2" {
   domain           = "example.com"
   app_name         = "web-app-2"
   environment_name = "production"
-  instance_type    = "t2.micro"
+  instance_type    = "t3.micro"
   create_dns_zone  = false
   db_name          = "webapp2db"
   db_user          = "bar"
   db_pass          = var.db_pass_2
+}
+
+# Add these to the bottom of web-app/main.tf
+
+output "web_app_1_alb_dns" {
+  description = "ALB DNS for web-app-1"
+  value       = module.web_app_1.alb_dns_name
+}
+
+output "web_app_2_alb_dns" {
+  description = "ALB DNS for web-app-2"
+  value       = module.web_app_2.alb_dns_name
+}
+
+output "web_app_1_db_addr" {
+  description = "DB address for web-app-1"
+  value       = module.web_app_1.db_instance_addr
+}
+
+output "web_app_2_db_addr" {
+  description = "DB address for web-app-2"
+  value       = module.web_app_2.db_instance_addr
 }

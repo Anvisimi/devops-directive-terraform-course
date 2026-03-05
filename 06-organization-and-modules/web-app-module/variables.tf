@@ -1,5 +1,6 @@
 # General Variables
 
+#not used
 variable "region" {
   description = "Default region for provider"
   type        = string
@@ -12,6 +13,7 @@ variable "app_name" {
   default     = "web-app"
 }
 
+# we must add a validation here in order to avoid typo or mis configs like "prod" / "production" etc
 variable "environment_name" {
   description = "Deployment environment (dev/staging/production)"
   type        = string
@@ -23,13 +25,13 @@ variable "environment_name" {
 variable "ami" {
   description = "Amazon machine image to use for ec2 instance"
   type        = string
-  default     = "ami-0ac0e4288aa341886" # Ubuntu 20.04 LTS // us-east-1
+  default     = "ami-0ac0e4288aa341886" # Ubuntu 20.04 LTS // ap-southeast-1
 }
 
 variable "instance_type" {
   description = "ec2 instance type"
   type        = string
-  default     = "t2.micro"
+  default     = "t3.micro" #t3.micro is same price but better performance
 }
 
 # S3 Variables
@@ -47,6 +49,7 @@ variable "create_dns_zone" {
   default     = false
 }
 
+#once can put a regex check for a supported format of domains
 variable "domain" {
   description = "Domain for website"
   type        = string
