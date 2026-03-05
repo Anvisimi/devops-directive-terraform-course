@@ -9,7 +9,7 @@ resource "aws_db_instance" "db_instance" {
   password            = var.db_pass
   skip_final_snapshot = true #false for production
   vpc_security_group_ids = [aws_security_group.rds.id] # which rule book to follwo 
-  deletion_protection = true            # prevents accidental terraform destroy
+  deletion_protection = false            # prevents accidental terraform destroy
   storage_encrypted   = true            # encrypt data at rest
   multi_az                = true
   backup_retention_period = 7

@@ -1,0 +1,96 @@
+terraform {
+  # Assumes s3 bucket and dynamo DB table already set up
+  # See /code/03-basics/aws-backend
+  backend "s3" {
+    bucket         = "devops-directive-tf-state-simr"
+    key            = "06*-organization-and-modules-eks/web-app/terraform.tfstate"
+    region         = "ap-southeast-1"
+    dynamodb_table = "terraform-state-locking"
+    encrypt        = true
+  }
+
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.92"
+    }
+  }
+}
+
+provider "aws" {
+  region = "ap-southeast-1"
+}
+
+variable "db_pass_1" {
+  description = "password for database #1"
+  type        = string
+  sensitive   = true
+}
+
+variable "db_pass_2" {
+  description = "password for database #2"
+  type        = string
+  sensitive   = true
+}
+
+module "web_app_1" {
+  source = "../web-app-module"
+
+  # Input Variables
+  bucket_prefix    = "web-app-1-data"
+  domain           = "example.com"
+  app_name         = "web-app-1"
+  environment_name = "production"
+  instance_type    = "t3.micro"
+  create_dns_zone  = false
+  db_name          = "profile"
+  db_user          = "ssadmin"
+  db_pass          = var.db_pass_1 # will pass this this runtime
+}
+
+# will apply in this folder
+module "web_app_2" {
+  #relative path as web-app and web-app-module has same parent
+  source = "../web-app-module"
+
+  # Input Variables
+  bucket_prefix    = "web-app-2-data"
+  domain           = "example.com"
+  app_name         = "web-app-2"
+  environment_name = "production"
+  instance_type    = "t3.micro"
+  create_dns_zone  = false
+  db_name          = "profile"
+  db_user          = "ssadmin"
+  db_pass          = var.db_pass_2
+}
+
+# Add these to the bottom of web-app/main.tf
+
+output "web_app_1_alb_dns" {
+  description = "ALB DNS for web-app-1"
+  value       = module.web_app_1.alb_dns_name
+}
+
+output "web_app_2_alb_dns" {
+  description = "ALB DNS for web-app-2"
+  value       = module.web_app_2.alb_dns_name
+}
+
+output "web_app_1_db_addr" {
+  description = "DB address for web-app-1"
+  value       = module.web_app_1.db_instance_addr
+}
+
+output "web_app_2_db_addr" {
+  description = "DB address for web-app-2"
+  value       = module.web_app_2.db_instance_addr
+}
+
+output "web_app_1_cluster_name" {
+  value = module.web_app_1.cluster_name
+}
+
+output "web_app_2_cluster_name" {
+  value = module.web_app_2.cluster_name
+}
